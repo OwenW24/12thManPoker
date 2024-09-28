@@ -1,2 +1,2 @@
-# maroonBoots
-Website for optimized boot sizing. Tamu HowdyHackathon 2024.
+# 12thManPoker
+Website for poker probability. Tamu HowdyHackathon 2024.
