@@ -31,6 +31,20 @@ const rankMapping = {
     'KING': { code: 'K', name: 'King', value: 13 }
 };
 
+// Hand strength rankings
+const handStrengths = {
+    "High Card": 1,
+    "One Pair": 2,
+    "Two Pair": 3,
+    "Three of a Kind": 4,
+    "Straight": 5,
+    "Flush": 6,
+    "Full House": 7,
+    "Four of a Kind": 8,
+    "Straight Flush": 9,
+    "Royal Flush": 10
+};
+
 // Store the selected cards in an array
 let hand = [];
 const maxHandSize = 5; // Limit to 5 cards
@@ -40,9 +54,10 @@ const suitInput = document.getElementById('suit-input');
 const rankInput = document.getElementById('rank-input');
 const addCardBtn = document.getElementById('add-card-btn');
 const handElement = document.getElementById('hand');
+const opponentsInput = document.getElementById('opponents-input');
 
 // Function to add a card to the hand
-function addCardToHand(suit, rankCode, rankName) {
+function addCardToHand(suit, rankCode, rankName, rankValue) {
     if (hand.length >= maxHandSize) {
         alert("Your hand is full! You can't select more than 5 cards.");
         return;
@@ -55,7 +70,7 @@ function addCardToHand(suit, rankCode, rankName) {
         return;
     }
 
-    const card = { suit, rankCode, rankName };
+    const card = { suit, rankCode, rankName, rankValue };
     hand.push(card);
     displayHand();
 
@@ -79,7 +94,22 @@ function displayHand() {
 // Function to display the hand result
 function displayHandResult(handName) {
     const resultElement = document.getElementById('hand-result');
-    resultElement.textContent = `You have a ${handName}!`;
+
+    // Get the number of opponents from the input
+    const numberOfOpponents = parseInt(opponentsInput.value) || 1;
+
+    const probabilityResult = probability(hand);
+    const winningLikelihood = likelihoodOfWinning(hand, numberOfOpponents);
+
+    // Format the probabilities as percentages
+    const handProbabilityPercentage = (probabilityResult.handProbability * 100).toFixed(6);
+    const winningProbabilityPercentage = (winningLikelihood.probabilityWinning * 100).toFixed(2);
+
+    resultElement.innerHTML = `
+        You have a <strong>${handName}</strong>!<br>
+        Probability of this hand: <strong>${handProbabilityPercentage}%</strong><br>
+        Estimated likelihood of winning against ${numberOfOpponents} opponent(s): <strong>${winningProbabilityPercentage}%</strong>
+    `;
 }
 
 // Function to validate the input
@@ -103,7 +133,12 @@ function validateInput(suit, rank) {
         return null;
     }
 
-    return { suit: fullSuit, rankCode: rankData.code, rankName: rankData.name, rankValue: rankData.value };
+    return {
+        suit: fullSuit,
+        rankCode: rankData.code,
+        rankName: rankData.name,
+        rankValue: rankData.value // Ensure rankValue is a number
+    };
 }
 
 // Event listener for the Add Card button
@@ -120,56 +155,54 @@ addCardBtn.addEventListener('click', function(event) {
 
     const validatedInput = validateInput(suitInputValue, rankInputValue);
     if (validatedInput) {
-        addCardToHand(validatedInput.suit, validatedInput.rankCode, validatedInput.rankName);
+        addCardToHand(
+            validatedInput.suit,
+            validatedInput.rankCode,
+            validatedInput.rankName,
+            validatedInput.rankValue
+        );
         // Clear input fields after adding the card
         suitInput.value = '';
         rankInput.value = '';
     }
 });
 
+// Function to evaluate the hand
 function evaluateHand(hand) {
-    // Extract suits and rank values
+    const rankValues = hand.map(card => Number(card.rankValue));
     const suits = hand.map(card => card.suit);
-    const rankValues = hand.map(card => card.rankValue);
 
-    // Sort rank values for straight checking
+    // Sort rank values
     rankValues.sort((a, b) => a - b);
 
-    // Count occurrences of each rank value and suit
+    // Count occurrences
     const rankCounts = {};
     const suitCounts = {};
 
-    for (let value of rankValues) {
+    rankValues.forEach(value => {
         rankCounts[value] = (rankCounts[value] || 0) + 1;
-    }
+    });
 
-    for (let suit of suits) {
+    suits.forEach(suit => {
         suitCounts[suit] = (suitCounts[suit] || 0) + 1;
-    }
+    });
 
-    // Check for flush (all cards have the same suit)
     const isFlush = Object.keys(suitCounts).length === 1;
 
-    // Check for straight
-    const isSequential = rankValues.every((value, index) => {
+    const isStraight = rankValues.every((value, index) => {
         if (index === 0) return true;
         return value === rankValues[index - 1] + 1;
     });
 
-    // Special case: Low Ace Straight (A, 2, 3, 4, 5)
+    // Special case for Ace-low straight
     const lowAceStraight = [2, 3, 4, 5, 14];
     const isLowAceStraight = rankValues.join(',') === lowAceStraight.join(',');
 
-    // Check for Royal Flush
-    const isRoyal = isFlush && isSequential && rankValues[0] === 10;
-
-    // Count of rank occurrences
     const counts = Object.values(rankCounts).sort((a, b) => b - a);
 
-    // Determine the hand ranking
-    if (isRoyal) {
+    if (isFlush && isStraight && rankValues[0] === 10) {
         return "Royal Flush";
-    } else if (isFlush && (isSequential || isLowAceStraight)) {
+    } else if (isFlush && (isStraight || isLowAceStraight)) {
         return "Straight Flush";
     } else if (counts[0] === 4) {
         return "Four of a Kind";
@@ -177,7 +210,7 @@ function evaluateHand(hand) {
         return "Full House";
     } else if (isFlush) {
         return "Flush";
-    } else if (isSequential || isLowAceStraight) {
+    } else if (isStraight || isLowAceStraight) {
         return "Straight";
     } else if (counts[0] === 3) {
         return "Three of a Kind";
@@ -190,7 +223,80 @@ function evaluateHand(hand) {
     }
 }
 
-function probability(hand){
+// Function to calculate the probability of the hand
+function probability(hand) {
+    const totalHands = 2598960; // Total possible 5-card hands
+    const handName = evaluateHand(hand);
 
-    
+    // Frequencies of each hand type
+    const handFrequencies = {
+        "Royal Flush": 4,
+        "Straight Flush": 36,
+        "Four of a Kind": 624,
+        "Full House": 3744,
+        "Flush": 5108,
+        "Straight": 10200,
+        "Three of a Kind": 54912,
+        "Two Pair": 123552,
+        "One Pair": 1098240,
+        "High Card": 1302540
+    };
+
+    const frequency = handFrequencies[handName];
+
+    // Calculate the probability
+    const handProbability = frequency / totalHands;
+
+    return { handName, handProbability };
 }
+
+// Function to estimate the likelihood of winning
+function likelihoodOfWinning(hand, numberOfOpponents = 1) {
+    const totalHands = 2598960;
+    const handName = evaluateHand(hand);
+    const handRank = handStrengths[handName];
+
+    // Frequencies of each hand type
+    const handFrequencies = {
+        "Royal Flush": 4,
+        "Straight Flush": 36,
+        "Four of a Kind": 624,
+        "Full House": 3744,
+        "Flush": 5108,
+        "Straight": 10200,
+        "Three of a Kind": 54912,
+        "Two Pair": 123552,
+        "One Pair": 1098240,
+        "High Card": 1302540
+    };
+
+    // Sum frequencies of hands stronger than the user's hand
+    let strongerHandsFrequency = 0;
+    for (let [name, frequency] of Object.entries(handFrequencies)) {
+        if (handStrengths[name] > handRank) {
+            strongerHandsFrequency += frequency;
+        }
+    }
+
+    // Probability that an opponent has a stronger hand
+    const probabilityStrongerHand = strongerHandsFrequency / totalHands;
+
+    // Probability that an opponent does not have a stronger hand
+    const probabilityNotStrongerHand = 1 - probabilityStrongerHand;
+
+    // Probability of winning against all opponents
+    const probabilityWinning = Math.pow(probabilityNotStrongerHand, numberOfOpponents);
+
+    return { handName, probabilityWinning };
+}
+
+// Optional: Update results when number of opponents changes
+function updateResults() {
+    if (hand.length === maxHandSize) {
+        const handName = evaluateHand(hand);
+        displayHandResult(handName);
+    }
+}
+
+// Add event listener to the opponents input field if you wish to update results dynamically
+opponentsInput.addEventListener('change', updateResults);
