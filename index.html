@@ -12,18 +12,31 @@
 
     <!-- Input fields for Suit and Rank -->
     <div class="input-container">
+
+        <label for="rank-input">Enter Rank (A, 2-10, J, Q, K):</label>  <!-- Reoriented -->
+        <input type="text" id="rank-input" placeholder="e.g., A">
+
+
         <label for="suit-input">Enter Suit (Hearts, Diamonds, Clubs, Spades):</label>
         <input type="text" id="suit-input" placeholder="e.g., Hearts">
         
-        <label for="rank-input">Enter Rank (A, 2-10, J, Q, K):</label>
-        <input type="text" id="rank-input" placeholder="e.g., A">
         
         <button id="add-card-btn">Add Card to Hand</button>
+
+        
     </div>
 
-    <h3>Your Hand:</h3>
-    <ul id="hand"></ul> <!-- Display the user's hand -->
-    <h3 id="hand-result"></h3>
+    <div class="output-container">
+        
+        <h2>Your Hand: </h2>
+
+        <ul id="hand"></ul> <!-- Display the user's hand -->
+        
+        <h3 id="hand-result"></h3>
+
+    </div>
+    
     <script src="app.js"></script>
+
 </body>
 </html>

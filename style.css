@@ -29,7 +29,7 @@ h1 {
 
 #add-card-btn {
     padding: 10px 20px;
-    margin-top: 15px;
+    margin-top: 5px;
     background-color: hsl(0, 0%, 50%);
     color: white;
     border: none;
@@ -39,6 +39,14 @@ h1 {
 #add-card-btn:hover {
     background-color: hsl(0, 0%, 69%);
 }
+
+.output-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
 
 #hand {
     list-style-type: none;
