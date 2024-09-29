@@ -1,13 +1,39 @@
+@font-face {
+    font-family: 'TEXASCRUST';
+    src: url('fonts/CarnivaleeFreakshow-DLrm.ttf') format('truetype');
+    }
+
 body {
     background-color: lightgrey;
+    background-image: url("images/western.png");
     font-family: 'Times New Roman', Times, serif;
     margin: 0;
     padding: 0;
 }
 
 h1 {
+    
     color: maroon;
     text-align: center;
+    font-family: 'TEXASCRUST'
+}
+
+/* Positioning the Logo Image */
+.logo img {
+    position: absolute; /* Corrected */
+    top: 10px;
+    right: 10px;
+    width: 100px;
+}
+
+/* Other Styles */
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ffffff;
+    margin: 1em 0;
+    padding: 0;
 }
 
 .input-container {
@@ -17,8 +43,21 @@ h1 {
     margin-top: 20px;
 }
 
+
 .input-container label {
-    margin-top: 10px;
+    font-weight:bold;
+    
+    /* background-color: #9fe9ff7e; */
+
+}
+
+.input-container input {
+    border: 3px solid #ffffff !important;
+    border-radius: 21px !important;
+    padding: 8px;
+    width: 200px;
+    margin-top: 5px;
+    background-color: #ffffff73;
 }
 
 .input-container input {
@@ -45,6 +84,7 @@ h1 {
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
+    
 }
 
 
@@ -53,6 +93,8 @@ h1 {
     padding: 0;
     font-size: 1.2rem;
     text-align: center;
+    font-family: 'TEXASCRUST'
+    
 }
 
 #hand li {
