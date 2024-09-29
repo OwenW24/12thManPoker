@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>12thManPoker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Welcome to the 12thManPoker!</h1>
+    <h1>Welcome to 12thManPoker!</h1>
     <hr>
-    <div class="dropdown">
-        <button>Suit</button>
-        <div class="content">
-            <a href="">Diamonds</a>
-            <a href="">Clubs</a>
-            <a href="">Spades</a>
-            <a href="">Hearts</a>
-        </div>
 
-        <p>Paragraph</p>
+    <!-- Input fields for Suit and Rank -->
+    <div class="input-container">
+        <label for="suit-input">Enter Suit (Hearts, Diamonds, Clubs, Spades):</label>
+        <input type="text" id="suit-input" placeholder="e.g., Hearts">
+        
+        <label for="rank-input">Enter Rank (A, 2-10, J, Q, K):</label>
+        <input type="text" id="rank-input" placeholder="e.g., A">
+        
+        <button id="add-card-btn">Add Card to Hand</button>
     </div>
+
+    <h3>Your Hand:</h3>
+    <ul id="hand"></ul> <!-- Display the user's hand -->
+    <h3 id="hand-result"></h3>
+    <script src="app.js"></script>
 </body>
 </html>

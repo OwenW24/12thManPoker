@@ -1,48 +1,63 @@
-body{
+body {
     background-color: lightgrey;
-    font-family:'Times New Roman', Times, serif;
-}
-h1{
-    color:maroon;
-}
-
-.dropdown{
-    display: inline-block
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0;
+    padding: 0;
 }
 
-.dropdown button{
-    background-color: hsl(0,0%,80%);
+h1 {
+    color: maroon;
+    text-align: center;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.input-container label {
+    margin-top: 10px;
+}
+
+.input-container input {
+    padding: 8px;
+    width: 200px;
+    margin-top: 5px;
+}
+
+#add-card-btn {
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: hsl(0, 0%, 50%);
     color: white;
-    padding: 10px 15px;
     border: none;
     cursor: pointer;
 }
 
-.dropdown a{
-    display: block;
-    color: black;
-    text-decoration: none;
-    padding: 10px 15px;
+#add-card-btn:hover {
+    background-color: hsl(0, 0%, 69%);
 }
 
-.dropdown .content{
-    display: none;
-    position: absolute;
-    background-color: hsl(0,0%,95%);
-    min-width: 100px;
-    box-shadow: 2px 2px 5px hsl(0,0%,0%,0.8);
+#hand {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.2rem;
+    text-align: center;
 }
 
-.dropdown:hover .content{
-    display: block;
+#hand li {
+    background-color: white;
+    margin: 5px auto;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    width: 200px;
 }
-.dropdown:hover button{
-    background-color: hsl(0,0%,69%);
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
 }
-.dropdown a:hover{
-    background-color: hsl(0,0%,90%);
-}
-
-
-
-
